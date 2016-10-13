@@ -1,3 +1,5 @@
+import numpy
+
 def readPackages(fileName):
     """ Reads the package dimensions and coordinatess from the file.
         Returns the dimensions and coordinates as lists ([width, length] and [x, y]). """
