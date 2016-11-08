@@ -3,7 +3,7 @@ import math
 import random
 
 def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
-                      iterations=2000, maxTries=10, initialTemp=100, k=0.001):
+                      iterations=5000, maxTries=10, initialTemp=100, k=0.001):
     order, pallet = init(len(packageCoords), palletDims)
     random.seed(seed)
     cost = calcCost(order, pallet, packageCoords, packageVars)
@@ -41,14 +41,14 @@ def mutate(order, pallet):
     newOrder = copy.deepcopy(order)
     newPallet = copy.deepcopy(pallet)
 
-    # mutate either the newOrder or the newPallet
-    choice = random.randint(0, 1)
-    if choice == 0:
+    # mutate the newOrder (0), the newPallet (1), or both
+    choice = random.randint(0, 2)
+    if choice in (0, 2):
         # pick two places in the pick-up newOrder and swap them
         n = random.randint(0, len(newOrder) - 1)
         m = random.randint(0, len(newOrder) - 1)
         newOrder[n], newOrder[m] = newOrder[m], newOrder[n]
-    else:
+    if choice in (1, 2):
         # pick two spots in the newPallet and swap them
         numColumns = len(newPallet)
         height = len(newPallet[0])
@@ -113,13 +113,15 @@ def calcCost(order, pallet, coords, packageVars):
             if item == -1:
                 continue
 
-            # if the item beneath this one is placed after or empty,
-            # add 2 to the multiplier
+            # if the item beneath this one is empty,
+            # add 1 to the multiplier plus the weight of this item
+            # else if it is placed after this item, add 1
             if slot > 0:
                 itemBeneath = pallet[column][slot-1]
-                if itemBeneath == -1 \
-                        or order.index(itemBeneath) > order.index(item):
-                    multiplier += 2
+                if itemBeneath == -1:
+                    multiplier += 1 + packageVars[item][0]
+                elif order.index(itemBeneath) > order.index(item):
+                    multiplier += 1
 
             # if the total weight above this item is greater
             # than its capacity, increment the multiplier
@@ -172,7 +174,7 @@ def test():
     packageVars = initVars(numItems, [1, 0], [2, 8])
     palletDims = [5, 5]
 
-    order, pallet = simulateAnnealing(coords, packageVars, palletDims, seed=3)
+    order, pallet = simulateAnnealing(coords, packageVars, palletDims, seed=5)
 
     print(calcCost(order, pallet, coords, packageVars))
     print(order)
@@ -182,7 +184,6 @@ def test():
     print(coords)
     print(packageVars)
 
-    
 
     # pallet = ["-"] * palletDims[0] * palletDims[1]
     # for i in range(numItems):

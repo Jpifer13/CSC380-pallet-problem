@@ -34,8 +34,3 @@ def main():
         print("Valid")
     else:
         print("Invalid +(", "error type", ")", sep="")
-
-
-
-
-
