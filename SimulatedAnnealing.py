@@ -1,18 +1,22 @@
-import copy
 import math
 import random
+from PalletLoadingHelpers import initPackages
+from PalletLoadingHelpers import mutate
 
 def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
-                      iterations=5000, maxTries=10, initialTemp=100, k=0.001):
+                      iterations=5000, maxTries=10, initialTemp=100, k=0.001,
+                      printIntermediates=False):
+
     order, pallet = init(len(packageCoords), palletDims)
     random.seed(seed)
+    rngState = random.getstate()
     cost = calcCost(order, pallet, packageCoords, packageVars)
 
     for t in range(iterations):
         temp = initialTemp / (1 + math.log(1 + t))
 
         for i in range(maxTries):
-            newOrder, newPallet = mutate(order, pallet)
+            newOrder, newPallet, rngState = mutate(order, pallet, rngState)
             newCost = calcCost(newOrder, newPallet, packageCoords, packageVars)
 
             deltaF = newCost - cost
@@ -29,42 +33,13 @@ def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
                     pallet = newPallet
                     cost = newCost
 
-        if t % (iterations / 10) == 0:
+        if printIntermediates and t % (iterations / 10) == 0:
             print(format(t, "0>3"), ": ", cost, sep='')
             print(order)
             printPallet(pallet)
             print()
 
     return order, pallet
-
-def mutate(order, pallet):
-    newOrder = copy.deepcopy(order)
-    newPallet = copy.deepcopy(pallet)
-
-    # mutate the newOrder (0), the newPallet (1), or both
-    choice = random.randint(0, 2)
-    if choice in (0, 2):
-        # pick two places in the pick-up newOrder and swap them
-        n = random.randint(0, len(newOrder) - 1)
-        m = random.randint(0, len(newOrder) - 1)
-        newOrder[n], newOrder[m] = newOrder[m], newOrder[n]
-    if choice in (1, 2):
-        # pick two spots in the newPallet and swap them
-        numColumns = len(newPallet)
-        height = len(newPallet[0])
-
-        # first newOrdered pair
-        a = random.randint(0, numColumns - 1)
-        b = random.randint(0, height - 1)
-
-        # second newOrdered pair
-        x = random.randint(0, numColumns - 1)
-        y = random.randint(0, height - 1)
-
-        # swap the items at the two coordinates
-        newPallet[a][b], newPallet[x][y] = newPallet[x][y], newPallet[a][b]
-
-    return newOrder, newPallet
 
 def init(numItems, palletDims):
     # initialize the order by starting in increasing order
@@ -99,6 +74,7 @@ def init(numItems, palletDims):
     return order, pallet
 
 def calcCost(order, pallet, coords, packageVars):
+
     # get the total distance of the route (the base cost)
     # and rack up a multiplier for each error in the pallet
     baseCost = 0
@@ -148,16 +124,6 @@ def palletToCoords(pallet, itemCount):
                 coords[item] = [column, slot]
     return coords
 
-def initVars(count, lowerBounds, upperBounds, seed=0):
-    random.seed(seed)
-
-    coords = []
-    for i in range(count):
-        x = random.randint(lowerBounds[0], upperBounds[0])
-        y = random.randint(lowerBounds[1], upperBounds[1])
-        coords.append([x, y])
-    return coords
-
 def printPallet(pallet):
     for j in range(len(pallet[0]) - 1, -1, -1):
         for i in range(len(pallet)):
@@ -167,23 +133,54 @@ def printPallet(pallet):
                 print(format(pallet[i][j], ">3") + " ", end="")
         print()
 
+def annealXTrials(numOfTrials, coords, packageVars, palletDims, seed=0,
+                 iterations=5000, maxTries=10, initialTemp=100, k=0.001):
+
+    trials = []
+    bestTrial = 0
+    bestCost = math.inf
+    random.seed(seed)
+    for trial in range(numOfTrials):
+        trialSeed = random.random()
+        rngState = random.getstate()
+
+        order, pallet = simulateAnnealing(coords, packageVars, palletDims, trialSeed,
+                          iterations, maxTries, initialTemp, k)
+
+        cost = calcCost(order, pallet, coords, packageVars)
+        if cost < bestCost:
+            bestTrial = trial
+            bestCost = cost
+
+        trials.append((order, pallet, cost))
+
+        print("TRIAL", trial)
+        print("Cost: ", cost, "\t(Best: ", bestCost, ")", sep="")
+        print("Order:", order)
+        print("Pallet:")
+        printPallet(pallet)
+        print()
+        print()
+
+        random.setstate(rngState)
+
+    return trials, bestTrial
+
 def test():
     numItems = 20
-    coords = initVars(numItems, [0, 0], [100, 100])
-    # packageVars = [[1, 5]] * 10
-    packageVars = initVars(numItems, [1, 0], [2, 8])
+    coords, weightVars = initPackages(numItems, 0, 100, 0, 100, 1, 2, 0, 8, seed=0)
     palletDims = [5, 5]
 
-    order, pallet = simulateAnnealing(coords, packageVars, palletDims, seed=5)
+    #routes = [(distance, [index0, index1, index2])] * 50
+    #routes.sort(key = lambda route : route[0])
 
-    print(calcCost(order, pallet, coords, packageVars))
-    print(order)
-    print()
-    printPallet(pallet)
-    print()
-    print(coords)
-    print(packageVars)
+    print("Coordinates:", coords)
+    print("Weight variables:", weightVars)
 
+    print()
+
+    annealXTrials(10, coords, weightVars, palletDims, seed=0,
+                  iterations=50000, maxTries=2, initialTemp=100, k=0.0001)
 
     # pallet = ["-"] * palletDims[0] * palletDims[1]
     # for i in range(numItems):
