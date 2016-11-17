@@ -1,8 +1,10 @@
 import copy
 import math
 from random import randint
+from PalletLoadingHelpers import shuffle
 
 paths = []
+distances = []
 
 x1 = [1.0, 5.0, 2.0, 7.0, 5.1, 2.1, 5.2, 3.0, 5.3, 9.0]
 y1 = [9, 4, 2, 6, 1, 8, 4, 2, 3, 6]
@@ -106,24 +108,82 @@ def randomTSP(x1, y1):
     print(path)
     print(returnIndexPath(x1, path))
     paths.append(path)
-    return distance
+    distances.append(distance)
+    return distance, path
 
+def sort(distances, paths):
+    routes = []
+    for i in range(0, len(distances)):
+        routes.append( (distances[i], paths[i]) )
+    routes.sort(key = lambda route : route[0])
+    #print(routes)
+    return routes
 
-def branchAndBound():
+def totalDistance(pathIndex, packages):
+    total = 0
+    for i in range(len(pathIndex)):
+        total = total + distanceFormula(packages[pathIndex[i]][0], packages[pathIndex[i-1]][0], packages[pathIndex[i]][1], packages[pathIndex[i-1]][1])
+    return total
+
+def branchAndBound(x1, y1):
     distances = []
-    global paths
-    dindex = 0
-    for i in range(0, 999):
-        distances.append(randomTSP(x1, y1))
-    tempd = copy.deepcopy(distances)
-    while (len(tempd) > 1):
-        if (tempd[0] < tempd[-1]):
-            tempd = tempd[0, -1]
-        elif (tempd[0] >= tempd[-1]):
-            tempd = tempd[1:]
-    for a in range(0, len(distances)):
-        if(tempd[0] == distances[0]):
-            dindex = 0
-            break
-        elif(tempd[0] == distances[a]):
-            dindex = a
+    paths = []
+    route = []
+    packages = []
+    totalD = 0
+
+
+    remainingIndex = [0]
+    for t in range(len(x1)):
+        packages.append( (x1[t], y1[t], t) )
+    remaining = list(range(len(packages)))
+    print(remaining)
+    #print(packages)
+    for q in range(0,949):
+        if(len(distances)<= 50):
+            for i in range(0, 50):
+                path, _ = shuffle(10, [10, 10])
+                distance = totalDistance(path, packages)
+                distances.append(distance)
+                paths.append(path)
+            routes = sort(distances, paths)
+            distances = []
+            paths = []
+        else:
+            if routes[-1][0] > distances[0]:
+                distances = distances[:-1]
+                max = len(routes) -1
+                mid = max/2
+                min = 0
+                while max > min:
+                    if distances[0] < routes[mid][0]:
+                        max = mid - 1
+                    else:
+                        min = mid + 1
+                    mid = (min + max)/2
+                routes.insert(mid, (distances[0], paths[0]) )
+    print(routes)
+
+    route.append((0,0)) #need to insert first tuple of packages (index, totalDistance)
+    remaining.remove(0)
+    i = 1
+    while len(remaining) < len(packages):
+        if remainingIndex[-1] >= len(remaining):
+            route.pop()
+            remaining.pop()
+        else:
+            route.append((i, route[-1][1] + distanceFormula(x1[route[-1][0]], packages[i][0], y1[route[-1][0]], packages[i][1]))) #adding next location
+            remaining.remove(i)
+        if route[-1][1] > routes[-1][0]:
+            route.remove(i, 0)
+            remaining.append(i)
+        i = i + 1
+
+    print(route)
+
+#randomTSP(x1, y1)
+branchAndBound(x1, y1)
+
+
+
+
