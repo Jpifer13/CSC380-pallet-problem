@@ -1,13 +1,12 @@
 import math
 import random
-from PalletLoadingHelpers import initPackages
-from PalletLoadingHelpers import mutate
+from PalletLoadingHelpers import *
 
 def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
                       iterations=5000, maxTries=10, initialTemp=100, k=0.001,
                       printIntermediates=False):
 
-    order, pallet = init(len(packageCoords), palletDims)
+    order, pallet = shuffle(len(packageCoords), palletDims)
     random.seed(seed)
     rngState = random.getstate()
     cost = calcCost(order, pallet, packageCoords, packageVars)
@@ -40,68 +39,6 @@ def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
             print()
 
     return order, pallet
-
-
-
-def calcCost(order, pallet, coords, packageVars):
-
-    # get the total distance of the route (the base cost)
-    # and rack up a multiplier for each error in the pallet
-    baseCost = 0
-    for i in order:
-        baseCost += distance(coords[order[i]], coords[order[i - 1]])
-
-    # multiply it for each error in the pallet
-    multiplier = 1
-    for column in range(len(pallet)):
-        for slot in range(len(pallet[column])):
-            item = pallet[column][slot]
-            if item == -1:
-                continue
-
-            # if the item beneath this one is empty,
-            # add 1 to the multiplier plus the weight of this item
-            # else if it is placed after this item, add 1
-            if slot > 0:
-                itemBeneath = pallet[column][slot-1]
-                if itemBeneath == -1:
-                    multiplier += 1 + packageVars[item][0]
-                elif order.index(itemBeneath) > order.index(item):
-                    multiplier += 1
-
-            # if the total weight above this item is greater
-            # than its capacity, increment the multiplier
-            totalWeight = 0
-            for itemAbove in pallet[column][slot+1:]:
-                if itemAbove == -1:
-                    break
-                totalWeight += packageVars[itemAbove][0]
-            if totalWeight > packageVars[item][1]:
-                multiplier += 1
-    cost = baseCost * multiplier
-
-    return cost
-
-def distance(coords1, coords2):
-    return math.sqrt((coords1[0] - coords2[0])**2 + (coords1[1] - coords2[1])**2)
-
-def palletToCoords(pallet, itemCount):
-    coords = [] * itemCount
-    for column in range(len(pallet)):
-        for slot in range(len(pallet[column])):
-            item = pallet[column][slot]
-            if item >= 0:
-                coords[item] = [column, slot]
-    return coords
-
-def printPallet(pallet):
-    for j in range(len(pallet[0]) - 1, -1, -1):
-        for i in range(len(pallet)):
-            if pallet[i][j] == -1:
-                print(" -- ", end="")
-            else:
-                print(format(pallet[i][j], ">3") + " ", end="")
-        print()
 
 def annealXTrials(numOfTrials, coords, packageVars, palletDims, seed=0,
                  iterations=5000, maxTries=10, initialTemp=100, k=0.001):
@@ -138,7 +75,7 @@ def annealXTrials(numOfTrials, coords, packageVars, palletDims, seed=0,
 
 def test():
     numItems = 20
-    coords, weightVars = initPackages(numItems, 0, 100, 0, 100, 1, 2, 0, 8, seed=0)
+    coords, weightVars = initPackages(numItems, 0, 100, 0, 100, 1, 2, 0, 8, seed=1)
     palletDims = [5, 5]
 
     #routes = [(distance, [index0, index1, index2])] * 50
