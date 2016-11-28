@@ -36,8 +36,9 @@ def mutate(order, pallet, rngState):
     choice = random.randint(0, 2)
     if choice in (0, 2):
         # pick two places in the pick-up newOrder and swap them
-        n = random.randint(0, len(newOrder) - 1)
-        m = random.randint(0, len(newOrder) - 1)
+        # excluding the first element
+        n = random.randint(1, len(newOrder) - 1)
+        m = random.randint(1, len(newOrder) - 1)
         newOrder[n], newOrder[m] = newOrder[m], newOrder[n]
     if choice in (1, 2):
         # pick two spots in the newPallet and swap them
@@ -60,9 +61,10 @@ def mutate(order, pallet, rngState):
 def shuffleOrder(numItems):
     # initialize the order by starting in increasing order
     # and then swapping each spot with another once
+    # excluding the first element
     order = list(range(numItems))
-    for i in range(numItems):
-        j = random.randint(0, len(order) - 1)
+    for i in range(1, numItems):
+        j = random.randint(1, len(order) - 1)
         order[i], order[j] = order[j], order[i]
     return order
 
@@ -72,7 +74,7 @@ def shufflePallet(numItems, palletDims):
     numColumns = palletDims[0]
     height = palletDims[1]
     pallet = []
-    for i in range(numColumns):
+    for _ in range(numColumns):
         pallet.append([-1] * height)
 
     i, j = 0, 0
@@ -96,11 +98,11 @@ def calcDistance(coords1, coords2):
 
 def calcRouteDistance(order, coords):
     distance = 0
-    for i in coords:
-        distance += distance(coords[order[i]], coords[order[i-1]])
+    for i in range(len(order)):
+        distance += calcDistance(coords[order[i]], coords[order[i-1]])
     return distance
 
-def calcPalletPenalty(order, pallet, packageVars):
+def calcPalletPenalty(order, pallet, weightVars):
     penalty = 1
     for column in range(len(pallet)):
         for slot in range(len(pallet[column])):
@@ -114,7 +116,7 @@ def calcPalletPenalty(order, pallet, packageVars):
             if slot > 0:
                 itemBeneath = pallet[column][slot - 1]
                 if itemBeneath == -1:
-                    penalty += 1 + packageVars[item][0]
+                    penalty += 1 + weightVars[item][0]
                 elif order.index(itemBeneath) > order.index(item):
                     penalty += 1
 
@@ -124,12 +126,12 @@ def calcPalletPenalty(order, pallet, packageVars):
             for itemAbove in pallet[column][slot + 1:]:
                 if itemAbove == -1:
                     break
-                totalWeight += packageVars[itemAbove][0]
-            if totalWeight > packageVars[item][1]:
+                totalWeight += weightVars[itemAbove][0]
+            if totalWeight > weightVars[item][1]:
                 penalty += 1
     return penalty
 
-def calcCost(order, pallet, coords, packageVars):
+def calcCost(order, pallet, coords, weightVars):
 
     # get the total distance of the route (the base cost)
     # and rack up a multiplier for each error in the pallet
@@ -137,7 +139,7 @@ def calcCost(order, pallet, coords, packageVars):
     baseCost = calcRouteDistance(order, coords)
 
     # multiply it for each error in the pallet
-    multiplier = calcPalletPenalty(order, pallet, packageVars)
+    multiplier = calcPalletPenalty(order, pallet, weightVars)
     cost = baseCost * multiplier
 
     return cost
