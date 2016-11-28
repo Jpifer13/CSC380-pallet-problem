@@ -6,7 +6,8 @@ def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
                       iterations=5000, maxTries=10, initialTemp=100, k=0.001,
                       printIntermediates=False):
 
-    order, pallet = shuffle(len(packageCoords), palletDims)
+    order = shuffleOrder(len(packageCoords))
+    pallet = shufflePallet(len(packageCoords), palletDims)
     random.seed(seed)
     rngState = random.getstate()
     cost = calcCost(order, pallet, packageCoords, packageVars)
@@ -59,7 +60,7 @@ def annealXTrials(numOfTrials, coords, packageVars, palletDims, seed=0,
             bestTrial = trial
             bestCost = cost
 
-        trials.append((order, pallet, cost))
+        trials.append( (order, pallet, cost) )
 
         print("TRIAL", trial)
         print("Cost: ", cost, "\t(Best: ", bestCost, ")", sep="")
@@ -74,12 +75,8 @@ def annealXTrials(numOfTrials, coords, packageVars, palletDims, seed=0,
     return trials, bestTrial
 
 def test():
-    numItems = 20
-    coords, weightVars = initPackages(numItems, 0, 100, 0, 100, 1, 2, 0, 8, seed=1)
+    coords, weightVars = initPackages(20, 0, 100, 0, 100, 1, 2, 0, 8, seed=0)
     palletDims = [5, 5]
-
-    #routes = [(distance, [index0, index1, index2])] * 50
-    #routes.sort(key = lambda route : route[0])
 
     print("Coordinates:", coords)
     print("Weight variables:", weightVars)
