@@ -14,8 +14,16 @@ def initVars(count, lowerBounds, upperBounds, seed=0):
     for i in range(count):
         x = random.randint(lowerBounds[0], upperBounds[0])
         y = random.randint(lowerBounds[1], upperBounds[1])
-        coords.append([x, y])
+        coords.append( (x, y) )
     return coords
+
+def tupletoList(coords):
+    x =[]
+    y = []
+    for i in range(len(coords)):
+        x.append(coords[i][0])
+        y.append(coords[i][1])
+    return x, y
 
 def mutate(order, pallet, rngState):
 

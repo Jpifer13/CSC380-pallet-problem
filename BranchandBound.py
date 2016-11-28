@@ -1,7 +1,7 @@
 import copy
 import math
 from random import randint
-from PalletLoadingHelpers import shuffle
+from PalletLoadingHelpers import *
 
 paths = []
 distances = []
@@ -132,57 +132,119 @@ def branchAndBound(x1, y1):
     packages = []
     totalD = 0
 
-
-    remainingIndex = [0]
+    #This loop finds 50 of the best routes/bounds using a random function
+    remainingIndex = [0, 0]
     for t in range(len(x1)):
         packages.append( (x1[t], y1[t], t) )
     remaining = list(range(len(packages)))
     print(remaining)
     #print(packages)
-    for q in range(0,949):
+    for q in range(0,249):
         if(len(distances)<= 50):
             for i in range(0, 50):
-                path, _ = shuffle(10, [10, 10])
+                path = shuffleOrder(len(packages))
                 distance = totalDistance(path, packages)
                 distances.append(distance)
                 paths.append(path)
-            routes = sort(distances, paths)
+            bestRoutes = sort(distances, paths)
             distances = []
             paths = []
         else:
-            if routes[-1][0] > distances[0]:
+            if bestRoutes[-1][0] > distances[0]:
                 distances = distances[:-1]
-                max = len(routes) -1
-                mid = max/2
+                max = len(bestRoutes) -1
+                mid = max//2
                 min = 0
                 while max > min:
-                    if distances[0] < routes[mid][0]:
+                    if distances[0] < bestRoutes[mid][0]:
                         max = mid - 1
                     else:
                         min = mid + 1
-                    mid = (min + max)/2
-                routes.insert(mid, (distances[0], paths[0]) )
-    print(routes)
+                    mid = (min + max)//2
+                bestRoutes.insert(mid, (distances[0], paths[0]) )
+    print(bestRoutes)
 
     route.append((0,0)) #need to insert first tuple of packages (index, totalDistance)
+    current = [remaining[0]]  # current index
     remaining.remove(0)
-    i = 1
-    while len(remaining) < len(packages):
-        if remainingIndex[-1] >= len(remaining):
-            route.pop()
-            remaining.pop()
-        else:
-            route.append((i, route[-1][1] + distanceFormula(x1[route[-1][0]], packages[i][0], y1[route[-1][0]], packages[i][1]))) #adding next location
-            remaining.remove(i)
-        if route[-1][1] > routes[-1][0]:
-            route.remove(i, 0)
-            remaining.append(i)
-        i = i + 1
 
-    print(route)
+    while len(remaining) < len(packages):
+        if len(remaining) == 0: #this is called when we found a route that is shorter then the longest bound and appends to best route list
+
+            if bestRoutes[-1][0] > route[-1][1]:
+                bestRoutes = bestRoutes[:-1]
+                max = len(bestRoutes) -1
+                mid = max//2
+                min = 0
+                while max > min:
+                    if route[-1][1] < bestRoutes[mid][0]:
+                        max = mid - 1
+                    else:
+                        min = mid + 1
+                    mid = (min + max)//2
+                if mid < 0:
+                    mid = 0
+                r = [x[0] for x in route]
+                bestRoutes.insert(mid, (route[-1][1], r) )
+
+            route.pop()
+            remainingIndex.pop()
+            remaining.insert(remainingIndex[-1], current[-1])
+            remainingIndex[-1] += 1
+            current.pop()
+        elif remainingIndex[-1] >= len(remaining):#when last node of tree is up
+            route.pop()
+            remainingIndex.pop()
+            remaining.insert(remainingIndex[-1], current[-1])
+            remainingIndex[-1] += 1
+            current.pop()
+        elif route[-1][1] > bestRoutes[-1][0]:
+            #when total distance of current becomes bigger then longest bound
+            #pop last position in route as well as last remainingIndex
+            route.pop()
+            remainingIndex.pop()
+            remaining.insert(remainingIndex[-1], current[-1])
+            remainingIndex[-1] += 1
+            current.pop()
+        else:#current changes to next index, add current to route and the distnce to route, then remove current index from remaining, and add a 0 to remaingingIndex
+            current.append(remaining[remainingIndex[-1]])
+            route.append((current[-1], route[-1][1] + distanceFormula(x1[route[-1][0]], packages[current[-1]][0], y1[route[-1][0]], packages[current[-1]][1]))) #adding next location
+            remaining.remove(current[-1])
+            remainingIndex.append(0)
+
+    return bestRoutes
+
+def findBestBuild(bestRoutes, weightVars):
+    pallet = []
+    row = [0, 0, 0, 0, 0]
+    for i in range(5):
+        pallet.append(row)
+    #print(pallet)
+    index = []
+    for x in range(len(weightVars)):
+        index.append( (x, weightVars[x]) )
+    print(index)
+    list = weightVars
+    for index in range(0, len(list)):
+        iSmall = index
+        for i in range(index, len(list)):
+            if list[iSmall][1][1] > list[i][1][1]:
+                iSmall = i
+        list[index], list[iSmall] = list[iSmall], list[index]
+
+
 
 #randomTSP(x1, y1)
-branchAndBound(x1, y1)
+
+def main():
+    coords, weightVars = initPackages(10, 0, 100, 0, 100, 1, 2, 0, 8)
+    x, y = tupletoList(coords)
+    bestRoutes = branchAndBound(x, y)
+    print(weightVars)
+    findBestBuild(bestRoutes, weightVars)
+
+
+main()
 
 
 
