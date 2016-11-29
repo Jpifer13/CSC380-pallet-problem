@@ -458,6 +458,140 @@ def main():
 main()
 
 
+
+
+
+def buildPalletBC(bestRoutes, weightVars):
+    index = []
+    pallet = []
+    current = 0
+
+    bestPallet = []
+
+    index = weightVars
+    remaining = list(range(len(index)))
+    for i in range(len(bestRoutes)):
+        pallet.append([index[bestRoutes[i][1][0]][1]])
+        remaining.remove(0)
+        for x in range(len(bestRoutes[i][1]) - 1):
+            if len(pallet) > 5:
+                pallet = []
+                break
+            elif len(remaining) == 0:
+                bestPallet.append(bestRoutes[i])
+            else:
+                pallet.insert(current, index[bestRoutes[i][1][1]])
+                n = addPackage([pallet[current]])
+                if n == 1:
+
+                    remaining.remove((current + 1))
+                else:
+                    pallet.pop([current][-1])
+                    current = current + 1
+                    pallet.append([index[bestRoutes[i][1][x]]])
+
+    print(bestPallet)
+
+
+def addPackage(palletPosition):
+    if len(palletPosition) == 1 or len(palletPosition) == 0:
+        return 1
+    else:
+        totweight = 0
+        for i in range(len(palletPosition) - 1):
+            totweight = totweight + palletPosition[i][0]
+        if totweight < palletPosition[0][1]:
+            return 1
+        else:
+            return 0
+
+
+def buildPallet(bestRoutes, weightVars):
+    index = []
+    pallet = []
+    for x in range(len(weightVars)):
+        index.append((x, weightVars[x]))
+    print(index)
+
+    # for ir in range(0, len(list)):
+    #   iSmall = ir
+    #  for i in range(ir, len(list)):
+    #     if list[iSmall][1][1] > list[i][1][1]:
+    #        iSmall = i
+    # list[ir], list[iSmall] = list[iSmall], list[ir]
+    # print(list)
+    bestPallet = []
+    remaining = list(range(len(index)))
+    remainingIndex = [0, 0]
+    for i in range(len(bestRoutes)):
+        pallet.append([index[bestRoutes[i][1][0]][1]])# need to insert first tuple of packages (index, totalDistance)
+        print(pallet)
+        current = [remaining[0]]  # current index
+        remaining.remove(0)
+
+        while len(remaining) < len(bestRoutes[i][1]):
+
+            if len(remaining) == 0:
+                bestPallet.append(bestRoutes[i])
+                break
+
+            elif len(pallet) > 5:
+                pallet.pop()
+                remainingIndex.pop()
+                remaining.insert(remainingIndex[-1], current[-1])
+                remainingIndex[-1] += 1
+                current.pop()
+
+            elif remainingIndex[-1] >= len(remaining):  # when last node of tree is up
+                pallet.pop()
+                remainingIndex.pop()
+                remaining.insert(remainingIndex[-1], current[-1])
+                remainingIndex[-1] += 1
+                current.pop()
+
+            elif len(pallet) == 1 and index[bestRoutes[i][1][1]][0] < pallet[0][1]:
+                pallet.insert([index[bestRoutes[i][1][1]][1]][0])
+                remaining.remove(1)
+                remainingIndex.append(0)
+
+            elif len(pallet) == 1 and index[bestRoutes[i][1][1]][0] > pallet[0][1]:
+                pallet.append([index[bestRoutes[i][1][1]][1]])
+                remaining.remove(1)
+                remainingIndex.append(0)
+
+
+            elif len(pallet) > 1 and pallet[0][1] < (pallet[current][0] + pallet[(current - 1)][0]):
+                # when total weight of current becomes bigger then weight capacity
+                # pop last position in pallet as well as last remainingIndex
+                pallet.pop()
+                remainingIndex.pop()
+                remaining.insert(remainingIndex[-1], current[-1])
+                remainingIndex[-1] += 1
+                current.pop()
+
+
+            else:
+                current.append(remaining[remainingIndex[-1]])
+                pallet.append(current[-1])
+                remaining.remove(current[-1])
+                remainingIndex.append(0)
+
+
+
+            # randomTSP(x1, y1)
+
+
+def main():
+    coords, weightVars = initPackages(10, 0, 100, 0, 100, 1, 2, 0, 8)
+    x, y = tupletoList(coords)
+    bestRoutes = branchAndBound(x, y)
+
+    buildPalletBC(bestRoutes, weightVars)
+
+
+main()
+
+
 def findBestBuild(bestRoutes, weightVars):
     pallet = []
     row = [0, 0, 0, 0, 0]
