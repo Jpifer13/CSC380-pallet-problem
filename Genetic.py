@@ -1,5 +1,6 @@
 from PalletLoadingHelpers import *
 import random
+import inspect
 
 def runGenetic(coords, weightVars, palletDims, seed=0,
                popSize=100, generations=500, numParentPairs=50, mutationProb=0.1):
@@ -185,7 +186,7 @@ def mutatePopulation(population, mutationProb):
             population[i] = (order, pallet)
 
 def runGeneticXTrials(coords, weightVars, palletDims, numOfTrials=5, seed=0,
-                      popSize=100, generations=500, numParentPairs=50, mutationProb=0.1):
+                      popSize=100, generations=100, numParentPairs=50, mutationProb=0.1):
 
     trials = []
     bestTrial = 0
@@ -218,6 +219,15 @@ def runGeneticXTrials(coords, weightVars, palletDims, numOfTrials=5, seed=0,
 
     return trials, bestTrial
 
+def runGeneticXTrialsF(file, coords, weightVars, palletDims, numOfTrials, seed,
+                       popSize, generations, numParentPairs, mutationProb):
+    genResult = runGeneticXTrials(coords, weightVars, palletDims, numOfTrials, seed,
+                               popSize, generations, numParentPairs, mutationProb)
+    i = genResult[1]
+    if isValidPallet(genResult[0][i][0], genResult[0][i][1], weightVars):
+        file.write(str(genResult[0][i][2]) + "," + str(genResult[0][i][0]) + "," + str(genResult[0][i][1]) + "\n")
+    else:
+        file.write("Invalid (" + str(genResult[0][i][2]) + "," + str(genResult[0][i][0]) + "," + str(genResult[0][i][1]) + ")\n")
 
 def test():
     coords, weightVars = initPackages(20, 0, 100, 0, 100, 1, 2, 0, 8, seed=1)
@@ -231,4 +241,4 @@ def test():
     runGeneticXTrials(coords, weightVars, palletDims, numOfTrials=10, seed=0,
                       popSize=100, generations=500, numParentPairs=50, mutationProb=0.1)
 
-test()
+# test()

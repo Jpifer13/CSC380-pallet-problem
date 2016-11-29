@@ -42,7 +42,7 @@ def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
     return order, pallet
 
 def annealXTrials(coords, packageVars, palletDims, numOfTrials=5, seed=0,
-                 iterations=10000, maxTries=2, initialTemp=100, k=0.0001):
+                 iterations=5000, maxTries=2, initialTemp=100, k=0.0001):
 
     trials = []
     bestTrial = 0
@@ -74,6 +74,15 @@ def annealXTrials(coords, packageVars, palletDims, numOfTrials=5, seed=0,
 
     return trials, bestTrial
 
+def annealXTrialsF(file, coords, weightVars, palletDims, numOfTrials, seed,
+                 iterations, maxTries, initialTemp, k):
+    annResult = annealXTrials(coords, weightVars, palletDims, numOfTrials, seed, iterations, maxTries, initialTemp, k)
+    i = annResult[1]
+    if isValidPallet(annResult[0][i][0], annResult[0][i][1], weightVars):
+        file.write(str(annResult[0][i][2]) + "," + str(annResult[0][i][0]) + "," + str(annResult[0][i][1]) + "\n")
+    else:
+        file.write("Invalid (" + str(annResult[0][i][2]) + "," + str(annResult[0][i][0]) + "," + str(annResult[0][i][1]) + ")\n")
+
 def test():
     coords, weightVars = initPackages(20, 0, 100, 0, 100, 1, 2, 0, 8, seed=1)
     palletDims = [5, 5]
@@ -94,4 +103,4 @@ def test():
     #         print(pallet[i, j], end="")
     #     print()
 
-test()
+# test()

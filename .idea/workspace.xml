@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8213fdd4-af91-40c0-b5db-e02cf29efbd4" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/PalletLoadingProject.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
+    <list default="true" id="8213fdd4-af91-40c0-b5db-e02cf29efbd4" name="Default" comment="branch and bounds pallet">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/PalletLoadingProject.iml" afterPath="$PROJECT_DIR$/.idea/PalletLoadingProject.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BranchandBound.py" afterPath="$PROJECT_DIR$/BranchandBound.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Genetic.py" afterPath="$PROJECT_DIR$/Genetic.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PalletLoadingHelpers.py" afterPath="$PROJECT_DIR$/PalletLoadingHelpers.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PalletLoadingMain.py" afterPath="$PROJECT_DIR$/PalletLoadingMain.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SimulatedAnnealing.py" afterPath="$PROJECT_DIR$/SimulatedAnnealing.py" />
     </list>
@@ -34,8 +31,8 @@
       <file leaf-file-name="PalletLoadingMain.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/PalletLoadingMain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="12" column="56" selection-start-line="12" selection-start-column="56" selection-end-line="12" selection-end-column="56" />
+            <state relative-caret-position="617">
+              <caret line="156" column="101" selection-start-line="156" selection-start-column="101" selection-end-line="156" selection-end-column="101" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -46,9 +43,11 @@
       <file leaf-file-name="Genetic.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Genetic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2469">
-              <caret line="230" column="66" selection-start-line="230" selection-start-column="66" selection-end-line="230" selection-end-column="66" />
-              <folding />
+            <state relative-caret-position="583">
+              <caret line="226" column="73" selection-start-line="226" selection-start-column="73" selection-end-line="226" selection-end-column="73" />
+              <folding>
+                <element signature="e#0#34#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -56,8 +55,8 @@
       <file leaf-file-name="SimulatedAnnealing.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SimulatedAnnealing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1196">
-              <caret line="43" column="73" selection-start-line="43" selection-start-column="73" selection-end-line="43" selection-end-column="73" />
+            <state relative-caret-position="491">
+              <caret line="78" column="44" selection-start-line="78" selection-start-column="44" selection-end-line="78" selection-end-column="44" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -68,8 +67,8 @@
       <file leaf-file-name="BranchandBound.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BranchandBound.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1058">
-              <caret line="449" column="61" selection-start-line="449" selection-start-column="61" selection-end-line="449" selection-end-column="61" />
+            <state relative-caret-position="571">
+              <caret line="461" column="119" selection-start-line="461" selection-start-column="119" selection-end-line="461" selection-end-column="119" />
               <folding />
             </state>
           </provider>
@@ -78,8 +77,8 @@
       <file leaf-file-name="PalletLoadingHelpers.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PalletLoadingHelpers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4830">
-              <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+            <state relative-caret-position="-7237">
+              <caret line="19" column="24" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -116,10 +115,10 @@
       <list>
         <option value="$PROJECT_DIR$/BestFit.py" />
         <option value="$PROJECT_DIR$/BranchAndBound2.py" />
-        <option value="$PROJECT_DIR$/BranchandBound.py" />
         <option value="$PROJECT_DIR$/PalletLoadingHelpers.py" />
         <option value="$PROJECT_DIR$/Genetic.py" />
         <option value="$PROJECT_DIR$/SimulatedAnnealing.py" />
+        <option value="$PROJECT_DIR$/BranchandBound.py" />
         <option value="$PROJECT_DIR$/PalletLoadingMain.py" />
       </list>
     </option>
@@ -184,7 +183,7 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
-  <component name="RunManager" selected="Python.SimulatedAnnealing">
+  <component name="RunManager" selected="Python.PalletLoadingMain">
     <configuration default="false" name="BranchandBound" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -232,6 +231,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="PalletLoadingProject" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SimulatedAnnealing.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="PalletLoadingMain" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="PalletLoadingProject" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PalletLoadingMain.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -370,16 +386,18 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.BranchandBound" />
       <item index="1" class="java.lang.String" itemvalue="Python.Genetic" />
       <item index="2" class="java.lang.String" itemvalue="Python.SimulatedAnnealing" />
+      <item index="3" class="java.lang.String" itemvalue="Python.PalletLoadingMain" />
     </list>
     <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.SimulatedAnnealing" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Genetic" />
-        <item index="2" class="java.lang.String" itemvalue="Python.BranchandBound" />
+      <list size="4">
+        <item index="0" class="java.lang.String" itemvalue="Python.PalletLoadingMain" />
+        <item index="1" class="java.lang.String" itemvalue="Python.BranchandBound" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Genetic" />
+        <item index="3" class="java.lang.String" itemvalue="Python.SimulatedAnnealing" />
       </list>
     </recent_temporary>
   </component>
@@ -453,7 +471,14 @@
       <option name="project" value="LOCAL" />
       <updated>1479408463514</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="branch and bounds pallet">
+      <created>1480388639213</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1480388639213</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -495,13 +520,25 @@
     <MESSAGE value="Skeleton" />
     <MESSAGE value="test" />
     <MESSAGE value="fixing merges" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixing merges" />
+    <MESSAGE value="branch and bounds pallet" />
+    <option name="LAST_COMMIT_MESSAGE" value="branch and bounds pallet" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="14" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/BranchandBound.py</url>
+          <line>230</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="23" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="line.split(',')" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/PalletLoadingMain.py">
@@ -518,7 +555,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -837,44 +876,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BranchandBound.py">
+    <entry file="file://C:/Program Files/Python35/Lib/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1058">
-          <caret line="449" column="61" selection-start-line="449" selection-start-column="61" selection-end-line="449" selection-end-column="61" />
+        <state relative-caret-position="366">
+          <caret line="308" column="0" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PalletLoadingHelpers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7237">
+          <caret line="19" column="24" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SimulatedAnnealing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1196">
-          <caret line="43" column="73" selection-start-line="43" selection-start-column="73" selection-end-line="43" selection-end-column="73" />
+        <state relative-caret-position="491">
+          <caret line="78" column="44" selection-start-line="78" selection-start-column="44" selection-end-line="78" selection-end-column="44" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PalletLoadingHelpers.py">
+    <entry file="file://$PROJECT_DIR$/Genetic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4830">
-          <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
-          <folding />
+        <state relative-caret-position="583">
+          <caret line="226" column="73" selection-start-line="226" selection-start-column="73" selection-end-line="226" selection-end-column="73" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Genetic.py">
+    <entry file="file://$PROJECT_DIR$/BranchandBound.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2469">
-          <caret line="230" column="66" selection-start-line="230" selection-start-column="66" selection-end-line="230" selection-end-column="66" />
+        <state relative-caret-position="571">
+          <caret line="461" column="119" selection-start-line="461" selection-start-column="119" selection-end-line="461" selection-end-column="119" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/PalletLoadingMain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="12" column="56" selection-start-line="12" selection-start-column="56" selection-end-line="12" selection-end-column="56" />
+        <state relative-caret-position="617">
+          <caret line="156" column="101" selection-start-line="156" selection-start-column="101" selection-end-line="156" selection-end-column="101" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>

@@ -165,6 +165,8 @@ def branchAndBound(x1, y1):
                     else:
                         min = mid + 1
                     mid = (min + max) // 2
+                if mid < 0:
+                    mid = 0
                 bestRoutes.insert(mid, (distances[0], paths[0]))
     print(bestRoutes)
 
@@ -221,6 +223,8 @@ def branchAndBound(x1, y1):
     return bestRoutes
 
 def findBestValid(bestRoutes, weightVars, palletDims):
+
+    bestRoutes.sort(key = lambda r: r[0])
 
     for route in bestRoutes:
 
@@ -434,9 +438,31 @@ def buildPallet(bestRoutes, weightVars):
 
             # randomTSP(x1, y1)
 
+def completeBranchAndBound(coords, weightVars, palletDims):
+    x, y = tupletoList(coords)
+    bestRoutes = branchAndBound(x, y)
+    print(bestRoutes)
+    print()
+
+    bestValid = findBestValid(bestRoutes, weightVars, palletDims)
+    if bestValid is not None:
+        distance, route, pallet = bestValid
+        print((distance, route))
+        printPallet(pallet)
+    else:
+        print("No valid pallet in the given bestRoutes")
+
+    return bestValid, min(bestRoutes, key= lambda r : r[0])
+
+def completeBranchAndBoundF(file, coords, weightVars, palletDims):
+    babResult, bestInvalid = completeBranchAndBound(coords, weightVars, palletDims)
+    if babResult is None:
+        file.write("Valid route not found (" + str(bestInvalid) + ")\n")
+    else:
+        file.write(str(babResult[0]) + "," + str(babResult[1]) + "," + str(babResult[2]) + " (" + str(bestInvalid) + ")\n")
 
 def main():
-    coords, weightVars = initPackages(8, 0, 100, 0, 100, 1, 2, 0, 6, seed=0)
+    coords, weightVars = initPackages(8, 0, 100, 0, 100, 1, 2, 0, 4, seed=0)
     print(coords)
     print(weightVars)
     print()
@@ -447,7 +473,7 @@ def main():
     print()
 
     # buildPalletBC(bestRoutes, weightVars)
-    bestValid = findBestValid(bestRoutes, weightVars, (2, 4))
+    bestValid = findBestValid(bestRoutes, weightVars, (4, 4))
     if bestValid is not None:
         distance, route, pallet = bestValid
         print( (distance, route) )
@@ -455,7 +481,7 @@ def main():
     else:
         print("No valid pallet in the given bestRoutes")
 
-main()
+# main()
 
 
 
@@ -581,15 +607,15 @@ def buildPallet(bestRoutes, weightVars):
             # randomTSP(x1, y1)
 
 
-def main():
-    coords, weightVars = initPackages(10, 0, 100, 0, 100, 1, 2, 0, 8)
-    x, y = tupletoList(coords)
-    bestRoutes = branchAndBound(x, y)
-
-    buildPalletBC(bestRoutes, weightVars)
-
-
-main()
+# def main():
+#     coords, weightVars = initPackages(10, 0, 100, 0, 100, 1, 2, 0, 8)
+#     x, y = tupletoList(coords)
+#     bestRoutes = branchAndBound(x, y)
+#
+#     buildPalletBC(bestRoutes, weightVars)
+#
+#
+# main()
 
 
 def findBestBuild(bestRoutes, weightVars):
