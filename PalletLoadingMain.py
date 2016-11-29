@@ -140,11 +140,11 @@ def averageCosts(fileName):
                 lineCounter = 0
 
     babAverage = sum(costs[0]) / len(costs[0])
-    babInvalidRatio = invalidCounts[0] / (len(costs[0]) + invalidCounts[0]) / 100
+    babInvalidRatio = invalidCounts[0] / (len(costs[0]) + invalidCounts[0])
     genAverage = sum(costs[1]) / len(costs[1])
-    genInvalidRatio = invalidCounts[1] / (len(costs[1]) + invalidCounts[1]) / 100
+    genInvalidRatio = invalidCounts[1] / (len(costs[1]) + invalidCounts[1])
     annAverage = sum(costs[2]) / len(costs[2])
-    annInvalidRatio = invalidCounts[2] / (len(costs[2]) + invalidCounts[2]) / 100
+    annInvalidRatio = invalidCounts[2] / (len(costs[2]) + invalidCounts[2])
 
     file.close()
 
@@ -152,19 +152,20 @@ def averageCosts(fileName):
 
     file.write("\n")
     file.write("====== AVERAGE COSTS ======\n")
-    file.write("Branch Average: " + str(babAverage) + "(" + str(babInvalidRatio) + "% invalid)\n")
-    file.write("Genetic Average: " + str(genAverage) + "(" + str(genInvalidRatio) + "% invalid)\n")
-    file.write("Annealing Average: " + str(annAverage) + "(" + str(annInvalidRatio) + "% invalid)\n")
+    file.write("Branch Average: " + str(babAverage) + " (" + str(babInvalidRatio) + "% invalid)\n")
+    file.write("Genetic Average: " + str(genAverage) + " (" + str(genInvalidRatio) + "% invalid)\n")
+    file.write("Annealing Average: " + str(annAverage) + " (" + str(annInvalidRatio) + "% invalid)\n")
 
     file.close()
 
 def main():
 
-    # file = open("tests\\default0.txt", "w")
-    # timeit._template_func = _template_func
-    # defaultComparison(100, 8, (4, 4), 0, 100, 0, 100, 1, 2, 0, 4, file)
-    # file.close()
+    fileName = "tests\\7packages.txt"
+    file = open(fileName, "w")
+    timeit._template_func = _template_func
+    defaultComparison(100, 7, (5, 5), 0, 100, 0, 100, 1, 2, 0, 4, file)
+    file.close()
 
-    averageCosts("tests\\default0.txt")
+    averageCosts(fileName)
 
 main()

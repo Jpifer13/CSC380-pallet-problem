@@ -177,13 +177,15 @@ def branchAndBound(x1, y1):
     while len(remaining) < len(packages):
         if len(remaining) == 0:  # this is called when we found a route that is shorter then the longest bound and appends to best route list
 
-            if bestRoutes[-1][0] > route[-1][1]:
+            dis = route[-1][1] + distanceFormula(x1[route[0][0]], packages[current[-1]][0], y1[route[0][0]],
+                                                 packages[current[-1]][1])
+            if bestRoutes[-1][0] > dis:
                 bestRoutes = bestRoutes[:-1]
                 max = len(bestRoutes) - 1
                 mid = max // 2
                 min = 0
                 while max > min:
-                    if route[-1][1] < bestRoutes[mid][0]:
+                    if dis < bestRoutes[mid][0]:
                         max = mid - 1
                     else:
                         min = mid + 1
@@ -191,7 +193,7 @@ def branchAndBound(x1, y1):
                 if mid < 0:
                     mid = 0
                 r = [x[0] for x in route]
-                bestRoutes.insert(mid, (route[-1][1], r))
+                bestRoutes.insert(mid, (dis, r))
 
             route.pop()
             remainingIndex.pop()
