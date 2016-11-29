@@ -3,7 +3,7 @@ import copy
 import math
 
 def initPackages(count, minX, maxX, minY, maxY,
-                minWeight, maxWeight, minCapacity, maxCapacity, seed=0):
+                 minWeight, maxWeight, minCapacity, maxCapacity, seed=0):
     coords = initVars(count, [minX, minY], [maxX, maxY], seed)
     weightVars = initVars(count, [minWeight, minCapacity], [maxWeight, maxCapacity], seed)
     return coords, weightVars
@@ -37,8 +37,8 @@ def mutate(order, pallet, rngState):
     if choice in (0, 2):
         # pick two places in the pick-up newOrder and swap them
         # excluding the first element
-        n = random.randint(1, len(newOrder) - 1)
-        m = random.randint(1, len(newOrder) - 1)
+        n = random.randint(0, len(newOrder) - 1)
+        m = random.randint(0, len(newOrder) - 1)
         newOrder[n], newOrder[m] = newOrder[m], newOrder[n]
     if choice in (1, 2):
         # pick two spots in the newPallet and swap them
@@ -63,8 +63,8 @@ def shuffleOrder(numItems):
     # and then swapping each spot with another once
     # excluding the first element
     order = list(range(numItems))
-    for i in range(1, numItems):
-        j = random.randint(1, len(order) - 1)
+    for i in range(0, numItems):
+        j = random.randint(0, len(order) - 1)
         order[i], order[j] = order[j], order[i]
     return order
 
@@ -131,6 +131,34 @@ def calcPalletPenalty(order, pallet, weightVars):
                 penalty += 1
     return penalty
 
+def isValidPallet(order, pallet, weightVars):
+    for column in range(len(pallet)):
+        for slot in range(len(pallet[column])):
+            item = pallet[column][slot]
+            if item == -1:
+                continue
+
+            # if the item beneath this one is empty or placed after,
+            # the pallet is invalid
+            if slot > 0:
+                itemBeneath = pallet[column][slot - 1]
+                if itemBeneath == -1:
+                    return False
+                elif order.index(itemBeneath) > order.index(item):
+                    return False
+
+            # if the total weight above this item is greater
+            # than its capacity, the pallet is invalid
+            totalWeight = 0
+            for itemAbove in pallet[column][slot + 1:]:
+                if itemAbove == -1:
+                    break
+                totalWeight += weightVars[itemAbove][0]
+            if totalWeight > weightVars[item][1]:
+                return False
+
+    return True
+
 def calcCost(order, pallet, coords, weightVars):
 
     # get the total distance of the route (the base cost)
@@ -161,3 +189,10 @@ def printPallet(pallet):
             else:
                 print(format(pallet[i][j], ">3") + " ", end="")
         print()
+
+
+def getNewPallet(palletDims):
+    pallet = []
+    for _ in range(palletDims[0]):
+        pallet.append([-1] * palletDims[1])
+    return pallet

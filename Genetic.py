@@ -2,7 +2,7 @@ from PalletLoadingHelpers import *
 import random
 
 def runGenetic(coords, weightVars, palletDims, seed=0,
-               popSize=100, generations=10000, numParentPairs=50, mutationProb=0.1):
+               popSize=100, generations=500, numParentPairs=50, mutationProb=0.1):
 
     random.seed(seed)
     population = initPopulation(len(coords), palletDims, popSize)
@@ -80,9 +80,9 @@ def spliceAndFill(route1, route2):
     if random.randint(0, 1) == 0:
         route1, route2 = route2, route1
 
-    # 33% chance each to splice just the route, just the pallet, or both.
+    # 25% chance each to splice just the route, just the pallet, both, or none (copy route1).
     # If one isn't changed, then it uses route1.
-    choice = random.randint(0, 2)
+    choice = random.randint(0, 3)
     order = route1[0]
     pallet = route1[1]
     if choice == 0 or choice == 2:
@@ -90,8 +90,8 @@ def spliceAndFill(route1, route2):
         numItems = len(route1[0])
 
         # get a range from route1
-        startIndex = random.randint(1, numItems - 2)
-        endIndex = random.randint(startIndex, numItems)
+        startIndex = random.randint(0, numItems - 2)
+        endIndex = random.randint(startIndex + 1, numItems)
         order = route1[0][startIndex:endIndex]
 
         # fill in the remaining elements from route2, in order
@@ -116,47 +116,62 @@ def spliceAndFill(route1, route2):
             pallet.append([-1] * numRows)
 
         # pick columns to take straight from route1
-        numToTake = random.randint(1, numColumns - 1)
+        numToTake = random.randint(0, numColumns)
         columnIndeces = list(range(numColumns))
         random.shuffle(columnIndeces)
 
         for i in range(numToTake):
-            pallet[i] = route1[1][columnIndeces[i]]
+            pallet[i] = copy.copy(route1[1][columnIndeces[i]])
 
         # fill in the rest of the columns randomly from the bottom up
         # using the remaining items from route2 in order
         remColumnHeights = [0] * numColumns
-        for i in range(len(remColumnHeights)):
-            
-        r2CIndex = 0
-        r2RIndex = 0
-        usedItems = sum(pallet, [])
-        while r2RIndex < numRows:
-            while route2[1][r2CIndex][r2RIndex] in usedItems:
-                r2CIndex += 1
-                if r2CIndex >= numColumns:
-                    r2CIndex = 0
-                    r2RIndex += 1
-                if r2RIndex >= numRows:
+        remColumns = list(range(numColumns))
+        col = 0
+        while col < len(remColumnHeights):
+            reachedTheTop = True
+            i = 0
+            while i < numRows:
+                if pallet[remColumns[col]][i] == -1:
+                    reachedTheTop = False
+                    break
+                i += 1
+            if reachedTheTop:
+                del remColumns[col]
+                del remColumnHeights[col]
+            else:
+                remColumnHeights[col] = i
+                col += 1
+
+        r2Col = 0
+        r2Row = 0
+        usedItems = sum(pallet, []) # flattened pallet
+        while r2Row < numRows:
+            while route2[1][r2Col][r2Row] in usedItems:
+                r2Col += 1
+                if r2Col >= numColumns:
+                    r2Col = 0
+                    r2Row += 1
+                if r2Row >= numRows:
                     return order, pallet
 
             # pick a random column (indexes from the end)
-            columnIndex = random.randrange(0, len(remColumnHeights))
-            pallet[-1 - columnIndex][remColumnHeights[columnIndex]] = \
-                    route2[1][r2CIndex][r2RIndex]
+            col = random.randrange(0, len(remColumnHeights))
+            pallet[remColumns[col]][remColumnHeights[col]] = \
+                    route2[1][r2Col][r2Row]
 
             # update the indeces
-            r2CIndex += 1
-            if r2CIndex >= numColumns:
-                r2CIndex = 0
-                r2RIndex += 1
+            r2Col += 1
+            if r2Col >= numColumns:
+                r2Col = 0
+                r2Row += 1
 
-            remColumnHeights[columnIndex] += 1
-            if remColumnHeights[columnIndex] >= numRows:
-                newIndex = len(remColumnHeights)
-                pallet[-1 - columnIndex], pallet[-newIndex] = \
-                        pallet[-newIndex], pallet[-1 - columnIndex]
-                del remColumnHeights[columnIndex]
+            remColumnHeights[col] += 1
+            while remColumnHeights[col] < numRows and pallet[remColumns[col]][remColumnHeights[col]] >= 0:
+                remColumnHeights[col] += 1
+            if remColumnHeights[col] >= numRows:
+                del remColumns[col]
+                del remColumnHeights[col]
 
     return order, pallet
 
@@ -169,8 +184,8 @@ def mutatePopulation(population, mutationProb):
             random.setstate(rngState)
             population[i] = (order, pallet)
 
-def runGeneticXTrials(numOfTrials, coords, weightVars, palletDims, seed=0,
-                      popSize=100, generations=10000, numParentPairs=50, mutationProb=0.1):
+def runGeneticXTrials(coords, weightVars, palletDims, numOfTrials=5, seed=0,
+                      popSize=100, generations=500, numParentPairs=50, mutationProb=0.1):
 
     trials = []
     bestTrial = 0
@@ -193,7 +208,8 @@ def runGeneticXTrials(numOfTrials, coords, weightVars, palletDims, seed=0,
         print("TRIAL", trial)
         print("Cost: ", cost, "\t(Best: ", bestCost, ")", sep="")
         print("Order:", order)
-        print("Pallet:")
+        isValid = isValidPallet(order, pallet, weightVars)
+        print("Pallet (", ("Valid" if isValid else "Invalid"), "):", sep='')
         printPallet(pallet)
         print()
         print()
@@ -212,7 +228,7 @@ def test():
 
     print()
 
-    runGeneticXTrials(10, coords, weightVars, palletDims, seed=0,
-                      popSize=100, generations=1000, numParentPairs=50, mutationProb=0.1)
+    runGeneticXTrials(coords, weightVars, palletDims, numOfTrials=10, seed=0,
+                      popSize=100, generations=500, numParentPairs=50, mutationProb=0.1)
 
 test()

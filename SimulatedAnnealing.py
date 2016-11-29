@@ -3,7 +3,7 @@ import random
 from PalletLoadingHelpers import *
 
 def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
-                      iterations=5000, maxTries=10, initialTemp=100, k=0.001,
+                      iterations=10000, maxTries=2, initialTemp=100, k=0.0001,
                       printIntermediates=False):
 
     order = shuffleOrder(len(packageCoords))
@@ -41,8 +41,8 @@ def simulateAnnealing(packageCoords, packageVars, palletDims, seed=0,
 
     return order, pallet
 
-def annealXTrials(numOfTrials, coords, packageVars, palletDims, seed=0,
-                 iterations=5000, maxTries=10, initialTemp=100, k=0.001):
+def annealXTrials(coords, packageVars, palletDims, numOfTrials=5, seed=0,
+                 iterations=10000, maxTries=2, initialTemp=100, k=0.0001):
 
     trials = []
     bestTrial = 0
@@ -75,7 +75,7 @@ def annealXTrials(numOfTrials, coords, packageVars, palletDims, seed=0,
     return trials, bestTrial
 
 def test():
-    coords, weightVars = initPackages(20, 0, 100, 0, 100, 1, 2, 0, 8, seed=0)
+    coords, weightVars = initPackages(20, 0, 100, 0, 100, 1, 2, 0, 8, seed=1)
     palletDims = [5, 5]
 
     print("Coordinates:", coords)
@@ -83,7 +83,7 @@ def test():
 
     print()
 
-    annealXTrials(10, coords, weightVars, palletDims, seed=0,
+    annealXTrials(coords, weightVars, palletDims, numOfTrials=5, seed=0,
                   iterations=50000, maxTries=2, initialTemp=100, k=0.0001)
 
     # pallet = ["-"] * palletDims[0] * palletDims[1]

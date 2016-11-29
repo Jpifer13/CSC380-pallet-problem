@@ -1,36 +1,48 @@
-def readPackages(fileName):
-    """ Reads the package dimensions, weights, and capacities from the file.
-        Returns the dimensions and coordinates as lists ([weight, capacity] and [x, y]). """
-    return [0,0]*25, [0,0]*25
+import datetime
+import timeit
 
-def tspAlgorithm(packageCoords):
-    """ Dummy method.
-        Returns the order as a list of indeces. """
-    return list(range(len(packageCoords)))
+from PalletLoadingHelpers import *
+import BranchandBound
+import Genetic
+import SimulatedAnnealing
 
-def packingAlgorithm(packageVars, order, palletDims):
-    """ Dummy method
-        Returns the pallet coordinates of the packages (x, y),
-            or None if no valid pallet can be constructed. """
-    return list( (0,0) * len(order) )
+def defaultComparison(numOfRuns, numOfPackages, palletDims, minX, maxX, minY, maxY,
+                      minWeight, maxWeight, minCapacity, maxCapacity, file):
 
-def validate(packageVars, palletCoords, order, palletDims):
-    """ Determines if the pallet meets all the constraints.
-        Returns True if the pallet is valid, False otherwise. """
-    return False
+    # write the method name and current date and time
+    file.write("defaultComparison, " + datetime.now().strftime("%x %X"))
+    # write the method arguments
+    file.write(("numOfRuns={0}, numOfPackages={1}, palletDims={2}, minX={2}, maxX={3}, minY={4}, maxY={5}, "
+                      + "minWeight={6}, maxWeight={7}, minCapacity={8}, maxCapacity={9}")
+                .format(numOfRuns, numOfPackages, palletDims, minX, maxX, minY, maxY,
+                        minWeight, maxWeight, minCapacity, maxCapacity))
+    file.write()
+
+    babTimes = []
+    babBests = []
+
+    geneticTimes = []
+    geneticBests = []
+    geneticDefaults =
+
+    annealingTimes = []
+    annealingBests = []
+
+    for i in range(numOfRuns):
+
+        file.write("======Run " + i + "======")
+        coords, weightVars = initPackages(numOfPackages, minX, maxX, minY, maxY,
+                                          minWeight, maxWeight, minCapacity, maxCapacity, i)
+        file.write("coords=" + str(coords))
+        file.write("weightVars=" + str(weightVars))
+        file.write()
+
+        file.write("Branch and Bounds " + i)
+
 
 def main():
-    packageVars, packageCoords = readPackages("file")
-    palletDims = (0,0)
 
-    order = tspAlgorithm(packageCoords)
+    file = open("default0.txt", "w")
+    defaultComparison(100, 8, (4, 4), 0, 100, 0, 100, 1, 2, 0, 4, file)
 
-    palletCoords = packingAlgorithm(packageVars, order, palletDims)
-
-    isValid = validate(packageVars, palletCoords, order, palletDims)
-
-    print("Time:", 0.0)
-    if isValid:
-        print("Valid")
-    else:
-        print("Invalid +(", "error type", ")", sep="")
+main()
